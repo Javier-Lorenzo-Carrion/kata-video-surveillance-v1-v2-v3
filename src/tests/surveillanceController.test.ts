@@ -38,6 +38,15 @@ describe("Video Surveillance controller should", () => {
         controller.recordMotion();
         expect(spyRecorder).toHaveBeenCalled();
     })
+    it("ask the recorder to stop recording when the sensor throws an error", ()=>{
+        const stubSensor = jest.spyOn(sensor, "isDetectingMotion");
+        stubSensor.mockImplementationOnce(() => {
+            throw new Error("Error");
+        });
+        const spyRecorder = jest.spyOn(recorder, "stopRecording");
+        controller.recordMotion();
+        expect(spyRecorder).toHaveBeenCalled();
+    })
 })
 
 
