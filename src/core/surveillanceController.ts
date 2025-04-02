@@ -11,11 +11,7 @@ export class SurveillanceController {
     constructor(private sensor: MotionSensor, private recorder: VideoRecorder) {}
     recordMotion(){
         try {
-            if(!this.sensor.isDetectingMotion()){
-                this.recorder.stopRecording();
-            } else {
-                this.recorder.startRecording();
-            }
+            !this.sensor.isDetectingMotion()? this.recorder.stopRecording() : this.recorder.startRecording();
         } catch (error) {
             this.recorder.stopRecording();
         }
