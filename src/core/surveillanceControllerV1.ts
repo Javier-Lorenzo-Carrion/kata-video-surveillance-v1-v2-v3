@@ -1,13 +1,6 @@
-export interface MotionSensor {
-    isDetectingMotion(): boolean;
-}
+import {MotionSensor, VideoRecorder} from "./suveillanceInterfaces";
 
-export interface VideoRecorder {
-    startRecording(): void;
-    stopRecording(): void;
-}
-
-export class SurveillanceController {
+export class SurveillanceControllerV1 {
     constructor(private sensor: MotionSensor, private recorder: VideoRecorder) {}
     recordMotion(){
         try {

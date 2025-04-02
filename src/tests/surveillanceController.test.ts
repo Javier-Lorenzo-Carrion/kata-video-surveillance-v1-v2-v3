@@ -1,5 +1,6 @@
-import {MotionSensor, SurveillanceController, VideoRecorder} from "../core/surveillanceController";
+import {SurveillanceControllerV1} from "../core/surveillanceControllerV1";
 import SpyInstance = jest.SpyInstance;
+import {MotionSensor, VideoRecorder} from "../core/suveillanceInterfaces";
 
 class FakeSensor implements MotionSensor {
     isDetectingMotion(): boolean {
@@ -16,15 +17,15 @@ class FakeRecorder implements VideoRecorder {
     }
 }
 
-describe("Video Surveillance controller should", () => {
+describe("Video Surveillance controller version 1 should", () => {
     let sensor: FakeSensor;
     let recorder: FakeRecorder;
-    let controller: SurveillanceController;
+    let controller: SurveillanceControllerV1;
     let stubSensor: SpyInstance, spyRecorderOnStart: SpyInstance, spyRecorderOnStop: SpyInstance;
     beforeEach(() => {
         sensor = new FakeSensor();
         recorder = new FakeRecorder();
-        controller = new SurveillanceController(sensor, recorder);
+        controller = new SurveillanceControllerV1(sensor, recorder);
         stubSensor = jest.spyOn(sensor, "isDetectingMotion");
         spyRecorderOnStart = jest.spyOn(recorder, "startRecording");
         spyRecorderOnStop = jest.spyOn(recorder, "stopRecording");
@@ -46,6 +47,10 @@ describe("Video Surveillance controller should", () => {
         controller.recordMotion();
         expect(spyRecorderOnStop).toHaveBeenCalled();
     })
+})
+
+describe("Video Surveillance controller version 2 should", () => {
+
 })
 
 
