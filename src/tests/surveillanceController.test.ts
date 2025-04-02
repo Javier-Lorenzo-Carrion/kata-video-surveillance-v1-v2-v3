@@ -16,20 +16,18 @@ class FakeRecorder implements VideoRecorder {
 }
 
 describe("Video Surveillance controller should", () => {
+    let sensor: FakeSensor;
+    let recorder: FakeRecorder;
+    let controller: SurveillanceController;
+    beforeEach(() => {
+        sensor = new FakeSensor();
+        recorder = new FakeRecorder();
+        controller = new SurveillanceController(sensor, recorder);
+    })
     it("ask the recorder to stop recording when the sensor detects no motion", ()=>{
-        let called = false;
-        const saveCall = () => {
-            called = true;
-        };
-
-        const sensor = new FakeSensor();
-        const recorder = new FakeRecorder();
-        recorder.stopRecording = saveCall;
-        const controller = new SurveillanceController(sensor, recorder);
-
+        const spyRecorder = jest.spyOn(recorder, "stopRecording");
         controller.recordMotion();
-
-        expect(called).toBe(true);
+        expect(spyRecorder).toHaveBeenCalled();
     })
 })
 

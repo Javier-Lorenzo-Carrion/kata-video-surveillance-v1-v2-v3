@@ -10,6 +10,10 @@ export interface VideoRecorder {
 export class SurveillanceController {
     constructor(private sensor: MotionSensor, private recorder: VideoRecorder) {}
     recordMotion(){
-        this.recorder.stopRecording();
+        if(!this.sensor.isDetectingMotion()){
+            this.recorder.stopRecording();
+        } else {
+            this.recorder.startRecording();
+        }
     }
 }
