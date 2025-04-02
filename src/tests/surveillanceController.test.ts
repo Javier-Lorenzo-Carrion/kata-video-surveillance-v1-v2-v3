@@ -12,6 +12,7 @@ class FakeRecorder implements VideoRecorder {
     startRecording() {
         console.log('Started recording');
     }
+
     stopRecording() {
         console.log("Recorder stopped");
     }
@@ -30,17 +31,17 @@ describe("Video Surveillance controller version 1 should", () => {
         spyRecorderOnStart = jest.spyOn(recorder, "startRecording");
         spyRecorderOnStop = jest.spyOn(recorder, "stopRecording");
     })
-    it("ask the recorder to stop recording when the sensor detects no motion", ()=>{
+    it("ask the recorder to stop recording when the sensor detects no motion", () => {
         stubSensor.mockImplementationOnce(() => false);
         controller.recordMotion();
         expect(spyRecorderOnStop).toHaveBeenCalled();
     })
-    it("ask the recorder to start recording when the sensor detects motion", ()=>{
+    it("ask the recorder to start recording when the sensor detects motion", () => {
         stubSensor.mockImplementationOnce(() => true);
         controller.recordMotion();
         expect(spyRecorderOnStart).toHaveBeenCalled();
     })
-    it("ask the recorder to stop recording when the sensor throws an error", ()=>{
+    it("ask the recorder to stop recording when the sensor throws an error", () => {
         stubSensor.mockImplementationOnce(() => {
             throw new Error("Error");
         });

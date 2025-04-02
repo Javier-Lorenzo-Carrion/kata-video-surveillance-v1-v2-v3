@@ -4,5 +4,6 @@ export interface MotionSensor {
 
 export interface VideoRecorder {
     startRecording(): void;
+
     stopRecording(): void;
 }
