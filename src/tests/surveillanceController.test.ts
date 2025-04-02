@@ -1,5 +1,4 @@
 import {SurveillanceControllerV1} from "../core/surveillanceControllerV1";
-import SpyInstance = jest.SpyInstance;
 import {MotionSensor, VideoRecorder} from "../core/suveillanceInterfaces";
 
 describe("Video Surveillance controller version 1 should", () => {
@@ -39,6 +38,18 @@ describe("Video Surveillance controller version 1 should", () => {
         controller.recordMotion();
         expect(videoRecorderMock.stopRecording).toHaveBeenCalled();
         expect(videoRecorderMock.startRecording).not.toHaveBeenCalled();
+    })
+    it("ask the sensor to check every one second for any motion", () => {
+        const motionSensorMock: MotionSensor = { isDetectingMotion: jest.fn().mockReturnValue(true) };
+        const videoRecorderMock: VideoRecorder = {
+            startRecording: jest.fn(),
+            stopRecording: jest.fn(),
+        };
+        const controller = new SurveillanceControllerV1(motionSensorMock, videoRecorderMock);
+        controller.recordMotion(3);
+        expect(motionSensorMock.isDetectingMotion).toHaveBeenCalledTimes(3);
+        expect(videoRecorderMock.startRecording).toHaveBeenCalledTimes(3);
+        expect(videoRecorderMock.stopRecording).not.toHaveBeenCalled();
     })
 })
 
