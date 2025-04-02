@@ -2,51 +2,43 @@ import {SurveillanceControllerV1} from "../core/surveillanceControllerV1";
 import SpyInstance = jest.SpyInstance;
 import {MotionSensor, VideoRecorder} from "../core/suveillanceInterfaces";
 
-class FakeSensor implements MotionSensor {
-    isDetectingMotion(): boolean {
-        return false;
-    }
-}
-
-class FakeRecorder implements VideoRecorder {
-    startRecording() {
-        console.log('Started recording');
-    }
-
-    stopRecording() {
-        console.log("Recorder stopped");
-    }
-}
-
 describe("Video Surveillance controller version 1 should", () => {
-    let sensor: FakeSensor;
-    let recorder: FakeRecorder;
-    let controller: SurveillanceControllerV1;
-    let stubSensor: SpyInstance, spyRecorderOnStart: SpyInstance, spyRecorderOnStop: SpyInstance;
-    beforeEach(() => {
-        sensor = new FakeSensor();
-        recorder = new FakeRecorder();
-        controller = new SurveillanceControllerV1(sensor, recorder);
-        stubSensor = jest.spyOn(sensor, "isDetectingMotion");
-        spyRecorderOnStart = jest.spyOn(recorder, "startRecording");
-        spyRecorderOnStop = jest.spyOn(recorder, "stopRecording");
-    })
     it("ask the recorder to stop recording when the sensor detects no motion", () => {
-        stubSensor.mockImplementationOnce(() => false);
+        const motionSensorMock: MotionSensor = { isDetectingMotion: jest.fn().mockReturnValue(false) };
+        const videoRecorderMock: VideoRecorder = {
+            startRecording: jest.fn(),
+            stopRecording: jest.fn(),
+        };
+        const controller = new SurveillanceControllerV1(motionSensorMock, videoRecorderMock);
         controller.recordMotion();
-        expect(spyRecorderOnStop).toHaveBeenCalled();
+        expect(videoRecorderMock.stopRecording).toHaveBeenCalled();
+        expect(videoRecorderMock.startRecording).not.toHaveBeenCalled();
     })
     it("ask the recorder to start recording when the sensor detects motion", () => {
-        stubSensor.mockImplementationOnce(() => true);
+        const motionSensorMock: MotionSensor = { isDetectingMotion: jest.fn().mockReturnValue(true) };
+        const videoRecorderMock: VideoRecorder = {
+            startRecording: jest.fn(),
+            stopRecording: jest.fn(),
+        };
+        const controller = new SurveillanceControllerV1(motionSensorMock, videoRecorderMock);
         controller.recordMotion();
-        expect(spyRecorderOnStart).toHaveBeenCalled();
+        expect(videoRecorderMock.startRecording).toHaveBeenCalled();
+        expect(videoRecorderMock.stopRecording).not.toHaveBeenCalled();
     })
     it("ask the recorder to stop recording when the sensor throws an error", () => {
-        stubSensor.mockImplementationOnce(() => {
-            throw new Error("Error");
-        });
+        const motionSensorMock: MotionSensor = {
+            isDetectingMotion: jest.fn().mockImplementationOnce(() => {
+                throw new Error("");
+            })
+        };
+        const videoRecorderMock: VideoRecorder = {
+            startRecording: jest.fn(),
+            stopRecording: jest.fn(),
+        };
+        const controller = new SurveillanceControllerV1(motionSensorMock, videoRecorderMock);
         controller.recordMotion();
-        expect(spyRecorderOnStop).toHaveBeenCalled();
+        expect(videoRecorderMock.stopRecording).toHaveBeenCalled();
+        expect(videoRecorderMock.startRecording).not.toHaveBeenCalled();
     })
 })
 

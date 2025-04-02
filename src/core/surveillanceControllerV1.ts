@@ -1,14 +1,14 @@
 import {MotionSensor, VideoRecorder} from "./suveillanceInterfaces";
 
 export class SurveillanceControllerV1 {
-    constructor(private sensor: MotionSensor, private recorder: VideoRecorder) {
+    constructor(private motionSensor: MotionSensor, private videoRecorder: VideoRecorder) {
     }
 
     recordMotion() {
         try {
-            !this.sensor.isDetectingMotion() ? this.recorder.stopRecording() : this.recorder.startRecording();
+            !this.motionSensor.isDetectingMotion() ? this.videoRecorder.stopRecording() : this.videoRecorder.startRecording();
         } catch (error) {
-            this.recorder.stopRecording();
+            this.videoRecorder.stopRecording();
         }
     }
 }
