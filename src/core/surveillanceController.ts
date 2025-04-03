@@ -1,3 +1,5 @@
+import {interval, take} from "rxjs";
+
 export interface MotionSensor {
     isDetectingMotion(): boolean;
 }
@@ -29,14 +31,19 @@ export class SurveillanceControllerV2 {
     constructor(private motionSensor: MotionSensor, private videoRecorder: VideoRecorder) {
     }
 
-    recordMotionV2() {
-        try {
-            switch (this.motionSensor.isDetectingMotion()) {
-                case false: this.videoRecorder.stopRecording(); break;
-                case true: this.videoRecorder.startRecording(); break;
+    recordMotionV2(numberOfSeconds: number) {
+        let observable = interval(1000).pipe(take(numberOfSeconds));
+        observable.subscribe({
+            next: () => {
+                try {
+                    switch (this.motionSensor.isDetectingMotion()) {
+                        case false: this.videoRecorder.stopRecording(); break;
+                        case true: this.videoRecorder.startRecording(); break;
+                    }
+                } catch (error) {
+                    this.videoRecorder.stopRecording();
+                }
             }
-        } catch (error) {
-            this.videoRecorder.stopRecording();
-        }
+        });
     }
 }

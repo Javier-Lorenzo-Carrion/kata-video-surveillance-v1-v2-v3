@@ -52,11 +52,18 @@ describe("Video Surveillance controller version 1 should", () => {
 })
 
 describe("Video Surveillance controller version 2 should", () => {
+    beforeEach(() => {
+        jest.useFakeTimers();
+    });
+    afterEach(() => {
+        jest.useRealTimers()
+    });
     it("ask the recorder to stop recording when the sensor detects no motion", () => {
         const motionSensorMock: MotionSensor = {isDetectingMotion: jest.fn().mockReturnValue(false)};
         const videoRecorderMock: VideoRecorder = {startRecording: jest.fn(), stopRecording: jest.fn()};
         const controller = new SurveillanceControllerV2(motionSensorMock, videoRecorderMock);
-        controller.recordMotionV2();
+        controller.recordMotionV2(1);
+        jest.advanceTimersByTime(1000);
         expect(videoRecorderMock.stopRecording).toHaveBeenCalled();
         expect(videoRecorderMock.startRecording).not.toHaveBeenCalled();
     })
@@ -64,7 +71,8 @@ describe("Video Surveillance controller version 2 should", () => {
         const motionSensorMock: MotionSensor = {isDetectingMotion: jest.fn().mockReturnValue(true)};
         const videoRecorderMock: VideoRecorder = {startRecording: jest.fn(), stopRecording: jest.fn()};
         const controller = new SurveillanceControllerV2(motionSensorMock, videoRecorderMock);
-        controller.recordMotionV2();
+        controller.recordMotionV2(1);
+        jest.advanceTimersByTime(1000);
         expect(videoRecorderMock.startRecording).toHaveBeenCalled();
         expect(videoRecorderMock.stopRecording).not.toHaveBeenCalled();
     })
@@ -72,9 +80,22 @@ describe("Video Surveillance controller version 2 should", () => {
         const motionSensorMock: MotionSensor = {isDetectingMotion: jest.fn().mockImplementationOnce(() => {throw new Error("");})};
         const videoRecorderMock: VideoRecorder = {startRecording: jest.fn(), stopRecording: jest.fn()};
         const controller = new SurveillanceControllerV2(motionSensorMock, videoRecorderMock);
-        controller.recordMotionV2();
+        controller.recordMotionV2(1);
+        jest.advanceTimersByTime(1000);
         expect(videoRecorderMock.stopRecording).toHaveBeenCalled();
         expect(videoRecorderMock.startRecording).not.toHaveBeenCalled();
+    })
+    it("ask the sensor to check every one second for any motion", () => {
+        const motionSensorMock: MotionSensor = {isDetectingMotion: jest.fn().mockReturnValue(true)};
+        const videoRecorderMock: VideoRecorder = {startRecording: jest.fn(), stopRecording: jest.fn()};
+        const controller = new SurveillanceControllerV2(motionSensorMock, videoRecorderMock);
+        controller.recordMotionV2(3);
+        jest.advanceTimersByTime(1000);
+        jest.advanceTimersByTime(1000);
+        jest.advanceTimersByTime(1000);
+        expect(motionSensorMock.isDetectingMotion).toHaveBeenCalledTimes(3);
+        expect(videoRecorderMock.startRecording).toHaveBeenCalledTimes(3);
+        expect(videoRecorderMock.stopRecording).not.toHaveBeenCalled();
     })
 })
 
