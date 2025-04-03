@@ -1,4 +1,11 @@
-import {MotionSensor, VideoRecorder} from "./surveillanceInterfaces";
+export interface MotionSensor {
+    isDetectingMotion(): boolean;
+}
+
+export interface VideoRecorder {
+    startRecording(): void;
+    stopRecording(): void;
+}
 
 export class SurveillanceControllerV1 {
     constructor(private motionSensor: MotionSensor, private videoRecorder: VideoRecorder) {
@@ -16,4 +23,16 @@ export class SurveillanceControllerV1 {
             if(elapsedSeconds >= numberOfSeconds) clearInterval(interval);
         }, 1000);
     }
+}
+
+export class SurveillanceControllerV2 {
+    constructor(private motionSensor: MotionSensor, private videoRecorder: VideoRecorder) {
+    }
+
+    // setTimeOut away/async
+    // Usando biblioteca RxJs
+    record(secondsToRecord: number): void {
+
+    }
+
 }
