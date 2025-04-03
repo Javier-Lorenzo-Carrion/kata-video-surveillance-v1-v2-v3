@@ -11,7 +11,7 @@ export class SurveillanceControllerV1 {
     constructor(private motionSensor: MotionSensor, private videoRecorder: VideoRecorder) {
     }
 
-    recordMotion(numberOfSeconds: number) {
+    recordMotionV1(numberOfSeconds: number) {
         let elapsedSeconds: number = 0;
         const interval = setInterval(() => {
             try {
@@ -29,10 +29,9 @@ export class SurveillanceControllerV2 {
     constructor(private motionSensor: MotionSensor, private videoRecorder: VideoRecorder) {
     }
 
-    // setTimeOut away/async
-    // Usando biblioteca RxJs
-    record(secondsToRecord: number): void {
-
+    recordMotionV2() {
+        switch (this.motionSensor.isDetectingMotion()) {
+            case false: this.videoRecorder.stopRecording(); break;
+        }
     }
-
 }
