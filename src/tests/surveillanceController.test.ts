@@ -68,6 +68,14 @@ describe("Video Surveillance controller version 2 should", () => {
         expect(videoRecorderMock.startRecording).toHaveBeenCalled();
         expect(videoRecorderMock.stopRecording).not.toHaveBeenCalled();
     })
+    it("ask the recorder to stop recording when the sensor throws an error", () => {
+        const motionSensorMock: MotionSensor = {isDetectingMotion: jest.fn().mockImplementationOnce(() => {throw new Error("");})};
+        const videoRecorderMock: VideoRecorder = {startRecording: jest.fn(), stopRecording: jest.fn()};
+        const controller = new SurveillanceControllerV2(motionSensorMock, videoRecorderMock);
+        controller.recordMotionV2();
+        expect(videoRecorderMock.stopRecording).toHaveBeenCalled();
+        expect(videoRecorderMock.startRecording).not.toHaveBeenCalled();
+    })
 })
 
 

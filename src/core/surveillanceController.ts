@@ -30,9 +30,13 @@ export class SurveillanceControllerV2 {
     }
 
     recordMotionV2() {
-        switch (this.motionSensor.isDetectingMotion()) {
-            case false: this.videoRecorder.stopRecording(); break;
-            case true: this.videoRecorder.startRecording(); break;
+        try {
+            switch (this.motionSensor.isDetectingMotion()) {
+                case false: this.videoRecorder.stopRecording(); break;
+                case true: this.videoRecorder.startRecording(); break;
+            }
+        } catch (error) {
+            this.videoRecorder.stopRecording();
         }
     }
 }
