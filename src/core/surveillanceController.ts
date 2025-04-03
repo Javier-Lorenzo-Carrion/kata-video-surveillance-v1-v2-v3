@@ -31,9 +31,9 @@ export class SurveillanceControllerV2 {
     constructor(private motionSensor: MotionSensor, private videoRecorder: VideoRecorder) {
     }
 
-    recordMotionV2(numberOfSeconds: number) {
-        let observable = interval(1000).pipe(take(numberOfSeconds));
-        observable.subscribe({
+    recordMotionV2(secondsOnChecking: number) {
+        let everySecondCheck = interval(1000).pipe(take(secondsOnChecking));
+        everySecondCheck.subscribe({
             next: () => {
                 try {
                     switch (this.motionSensor.isDetectingMotion()) {
