@@ -1,5 +1,5 @@
 import {
-    MotionSensor,
+    MotionSensor, MotionSensorListener, Observer,
     SurveillanceControllerV3,
     VideoRecorder
 } from "../../core/observer-pattern/surveillanceControllerObserver";
@@ -54,5 +54,15 @@ describe("Video Surveillance controller version 3 should", () => {
         const videoRecorderMock: VideoRecorder = {startRecording: jest.fn(), stopRecording: jest.fn()};
         const controller = new SurveillanceControllerV3(motionSensorMock, videoRecorderMock);
         expect(motionSensorMock.subscribe).toBeCalledWith(controller);
+    })
+})
+
+describe("Motion sensor listener should", () => {
+    it("allow a subscriber", () => {
+      const sensor = new MotionSensorListener();
+      const subscriberMock: Observer = {update: jest.fn()};
+      sensor.subscribe(subscriberMock);
+      sensor.setMotionDetection(true);
+      expect(subscriberMock.update).toBeCalled();
     })
 })
