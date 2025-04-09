@@ -73,4 +73,11 @@ describe("Motion sensor listener should", () => {
         sensor.setMotionDetection(true);
         expect(subscriberMock.update).not.toHaveBeenCalled();
     })
+    it("return the state of motion detection when a change happened", () => {
+        let sensor = new MotionSensorListener();
+        sensor.setMotionDetection(true);
+        expect(sensor.isDetectingMotion()).toBeTruthy();
+        sensor.setMotionDetection(false);
+        expect(sensor.isDetectingMotion()).toBeFalsy();
+    })
 })
