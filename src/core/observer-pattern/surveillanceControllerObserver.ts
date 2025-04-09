@@ -20,9 +20,14 @@ export class SurveillanceControllerV3 implements Observer {
     }
 
     update() {
-        if (this.motionSensor.isDetectingMotion()) {
-            this.videoRecorder.startRecording();
-        } else {
+        try {
+            if (this.motionSensor.isDetectingMotion()) {
+                this.videoRecorder.startRecording();
+            } else {
+                this.videoRecorder.stopRecording();
+            }
+        }
+        catch (error) {
             this.videoRecorder.stopRecording();
         }
     }
