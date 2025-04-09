@@ -55,17 +55,14 @@ describe("Video Surveillance controller version 3 should", () => {
         const controller = new SurveillanceControllerV3(motionSensorMock, videoRecorderMock);
         expect(motionSensorMock.subscribe).toBeCalledWith(controller);
     })
-})
-
-describe("Motion sensor listener should", () => {
-    it("allow a subscriber and notify the states changes", () => {
-      const sensor = new MotionSensorListener();
-      const subscriberMock: Observer = {update: jest.fn()};
-      sensor.subscribe(subscriberMock);
-      sensor.setMotionDetection(true);
-      expect(subscriberMock.update).toBeCalled();
+    it("subscribe to he sensor and be notified about the states changes", () => {
+        const sensor = new MotionSensorListener();
+        const subscriberMock: Observer = {update: jest.fn()};
+        sensor.subscribe(subscriberMock);
+        sensor.setMotionDetection(true);
+        expect(subscriberMock.update).toBeCalled();
     })
-    it("allow unsubscriber and not notify the states changes", () => {
+    it("unsubscribe and not be notified about the states changes", () => {
         const sensor = new MotionSensorListener();
         const subscriberMock: Observer = {update: jest.fn()};
         sensor.subscribe(subscriberMock);
@@ -73,7 +70,7 @@ describe("Motion sensor listener should", () => {
         sensor.setMotionDetection(true);
         expect(subscriberMock.update).not.toHaveBeenCalled();
     })
-    it("return the state of motion detection when a change happened", () => {
+    it("receive from sensor the state of motion detection when a change happened", () => {
         let sensor = new MotionSensorListener();
         sensor.setMotionDetection(true);
         expect(sensor.isDetectingMotion()).toBeTruthy();
