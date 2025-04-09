@@ -58,7 +58,7 @@ describe("Video Surveillance controller version 3 should", () => {
 })
 
 describe("Motion sensor listener should", () => {
-    it("allow a subscriber", () => {
+    it("allow a subscriber and notify the states changes", () => {
       const sensor = new MotionSensorListener();
       const subscriberMock: Observer = {update: jest.fn()};
       sensor.subscribe(subscriberMock);
