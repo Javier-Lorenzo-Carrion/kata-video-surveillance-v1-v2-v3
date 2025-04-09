@@ -65,4 +65,12 @@ describe("Motion sensor listener should", () => {
       sensor.setMotionDetection(true);
       expect(subscriberMock.update).toBeCalled();
     })
+    it("allow unsubscriber and not notify the states changes", () => {
+        const sensor = new MotionSensorListener();
+        const subscriberMock: Observer = {update: jest.fn()};
+        sensor.subscribe(subscriberMock);
+        sensor.unsubscribe(subscriberMock);
+        sensor.setMotionDetection(true);
+        expect(subscriberMock.update).not.toHaveBeenCalled();
+    })
 })
