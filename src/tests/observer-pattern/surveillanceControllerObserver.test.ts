@@ -18,4 +18,17 @@ describe("Video Surveillance controller version 3 should", () => {
         expect(videoRecorderMock.stopRecording).toHaveBeenCalled();
         expect(videoRecorderMock.startRecording).not.toHaveBeenCalled();
     })
+    it("ask the recorder to start recording when the sensor detects motion", () => {
+        const motionSensorMock: MotionSensor = {
+            subscribe: jest.fn(),
+            unsubscribe: jest.fn(),
+            isDetectingMotion: jest.fn().mockReturnValue(true),
+            notify(){}
+        }
+        const videoRecorderMock: VideoRecorder = {startRecording: jest.fn(), stopRecording: jest.fn()};
+        const controller = new SurveillanceControllerV3(motionSensorMock, videoRecorderMock);
+        controller.update();
+        expect(videoRecorderMock.startRecording).toHaveBeenCalled();
+        expect(videoRecorderMock.stopRecording).not.toHaveBeenCalled();
+    })
 })
