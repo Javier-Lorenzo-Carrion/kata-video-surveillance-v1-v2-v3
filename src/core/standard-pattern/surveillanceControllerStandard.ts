@@ -6,6 +6,7 @@ export interface MotionSensor {
 
 export interface VideoRecorder {
     startRecording(): void;
+
     stopRecording(): void;
 }
 
@@ -22,7 +23,7 @@ export class SurveillanceControllerV1 {
                 this.videoRecorder.stopRecording();
             }
             elapsedSeconds++;
-            if(elapsedSeconds >= numberOfSeconds) clearInterval(interval);
+            if (elapsedSeconds >= numberOfSeconds) clearInterval(interval);
         }, 1000);
     }
 }
@@ -37,8 +38,12 @@ export class SurveillanceControllerV2 {
             next: () => {
                 try {
                     switch (this.motionSensor.isDetectingMotion()) {
-                        case false: this.videoRecorder.stopRecording(); break;
-                        case true: this.videoRecorder.startRecording(); break;
+                        case false:
+                            this.videoRecorder.stopRecording();
+                            break;
+                        case true:
+                            this.videoRecorder.startRecording();
+                            break;
                     }
                 } catch (error) {
                     this.videoRecorder.stopRecording();
